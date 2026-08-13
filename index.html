@@ -670,7 +670,7 @@ select.instrument-select{
 <div id="adjustModal" class="modal-overlay" style="display:none;">
   <div class="modal-box">
     <h4>Adjust Monthly Saving</h4>
-    <p class="code-hint" id="adjustForcedNote" style="display:none;color:var(--rose);">Your cashflow is negative. Reduce your monthly saving until it's positive to continue.</p>
+    <p class="code-hint" id="adjustForcedNote" style="display:none;color:var(--rose);">Your monthly balance is negative. Reduce your monthly saving until it's positive to continue.</p>
     <div class="row" style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px;margin-bottom:6px;">
       <span id="adjustPctLabel">10% of salary</span><span id="adjustPctAmt">-RM0/mo</span>
     </div>
@@ -1342,7 +1342,7 @@ const TRANSLATIONS={
     familyLabel:'&#10084;&#65039; Family', confirm:'Confirm', continueBtn:'Continue &rarr;',
     next:'Next &rarr;', max:'Max', save:'Save', cancel:'Cancel', keepAsCash:'Keep as Cash',
     cashOnHand:'Cash on Hand', emergencyFund:'Emergency Fund', epf:'EPF', netWorth:'Net Worth',
-    cashFlow:'Cash Flow', energy:'Energy', family:'Family', invest:'Invest',
+    cashFlow:'Monthly Balance', energy:'Energy', family:'Family', invest:'Invest',
     diversifyTitle:'Diversify Your investments', keepAsCashBtn:'Keep as cash', diversifyBtn:'Diversify',
     available:'Available', allocated:'Allocated', balanceToAllocate:'Balance to Allocate',
     baseMonthlyExpenses:'Base Monthly Expenses:', yourInvestmentMix:'Your Investment Mix',
@@ -1441,7 +1441,7 @@ function resolveCode(){
         <div><span>Total Net Worth</span><span>${fmt(netWorth)}</span></div>
         <div><span>Gross Salary</span><span>${fmt(c.gross)}/mo</span></div>
         <div><span>Base Monthly Expenses</span><span>${fmt(c.expenses)}</span></div>
-        <div><span>Net Cash Flow</span><span>+${fmt(netCF)}/mo</span></div>
+        <div><span>Net Monthly Balance</span><span>+${fmt(netCF)}/mo</span></div>
       </div>
     </div>`;
   goTo('screen-profile');
@@ -1539,14 +1539,14 @@ function updateHud(){
     : 'Monthly Expenses';
   const tiles=[
     ['Cash on Hand',state.cash,fmt(state.cash),true],
-    ['Cash Flow',cashflow,fmt(cashflow)+'/mo',true],
+    ['Monthly Balance',cashflow,fmt(cashflow)+'/mo',true],
     ['EPF',state.epf,fmt(state.epf),false],
     ['Invest.',invTotal,fmt(invTotal),false],
     ['Active Income',activeIncome,fmt(activeIncome)+'/mo',false],
     ['Passive Income',passiveIncome,fmt(passiveIncome)+'/mo',false],
     [expensesLabel,displayedExpenses,fmt(displayedExpenses)+'/mo',false],
   ];
-  fin.innerHTML = tiles.map(([label,raw,val,isHighlight])=>`<div class="fin-item${isHighlight?' highlight':''}"><span>${label}</span><b${label==='Cash Flow'?cashflowColorStyle(raw):(raw<0?' style="color:var(--rose);"':'')}>${val}</b></div>`).join('');
+  fin.innerHTML = tiles.map(([label,raw,val,isHighlight])=>`<div class="fin-item${isHighlight?' highlight':''}"><span>${label}</span><b${label==='Monthly Balance'?cashflowColorStyle(raw):(raw<0?' style="color:var(--rose);"':'')}>${val}</b></div>`).join('');
 }
 
 function renderStep(){
@@ -2177,7 +2177,7 @@ function confirmBonus(){
 
 /* ---------- Pre-Retirement Withdrawal (age 50, custom: Akaun Sejahtera + Akaun Fleksibel) ---------- */
 let epfWithdrawState=null;
-const EPF_WITHDRAW_MENU=['ASB','UTEQUITY','SHARE','GOLD'];
+const EPF_WITHDRAW_MENU=['ASB','UTEQUITY','GOLD','SHARE'];
 function epfAvailablePot(){
   if(state.epfWithdrawablePot==null){ state.epfWithdrawablePot = Math.round(state.epf*0.25); }
   return state.epfWithdrawablePot;
@@ -3929,7 +3929,7 @@ function renderDebtCheckStage(){
       const income = dividendEligible ? Math.round(state.epf*0.05/12) : 0;
       stableRows.push({label:'EPF', amount:state.epf, icon:'🏦', income});
     }
-    ['ASB','ENDOWMENT'].forEach(key=>{
+    ['ENDOWMENT','ASB'].forEach(key=>{
       const total=lotTotal(key);
       if(total>0){
         const label = key==='ASB' ? (state.isMuslim?'ASB':'ASM') : INSTRUMENTS[key].label;
@@ -3978,7 +3978,7 @@ function renderDebtCheckStage(){
         </div>
         <p class="scenario">Here's your current investment mix — worth a look before deciding whether to settle any loans.</p>
         <div class="protection-summary">${mixHtml}</div>
-        <p class="scenario">Select any loan(s) you're considering settling to see the cashflow impact before deciding.</p>
+        <p class="scenario">Select any loan(s) you're considering settling to see the monthly balance impact before deciding.</p>
         ${debtRows}
         <div class="options">
           <button type="button" class="opt" id="debtSettleBtn" onclick="proceedToSettle()" disabled>Settle Selected Loan(s)</button>
@@ -4914,9 +4914,9 @@ function renderCarStage(){
   const loanPanel = downSufficient
     ? `<div class="cf-breakdown">
          <div class="cf-row"><span>Down payment (30%)</span><b class="neg">-${fmt(CAR_DOWN)}</b></div>
-         <div class="cf-row"><span>Current cashflow</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
+         <div class="cf-row"><span>Current Monthly Balance</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
          <div class="cf-row"><span>Car installment</span><b class="neg">-${fmt(CAR_INSTALLMENT)}/mo</b></div>
-         <div class="cf-row cf-total"><span>New cashflow</span><b${cashflowColorStyle(loanAfter)}>${fmt(loanAfter)}/mo</b></div>
+         <div class="cf-row cf-total"><span>New Monthly Balance</span><b${cashflowColorStyle(loanAfter)}>${fmt(loanAfter)}/mo</b></div>
        </div>
        <div class="confirm-row"><button class="btn gold" onclick="confirmCarLoanDirect()">Confirm</button></div>`
     : `<div class="cf-breakdown" style="border-top:none;margin-top:0;">
@@ -4927,14 +4927,14 @@ function renderCarStage(){
        <p class="scenario">Where should the remaining ${fmt(carShortfall('loan'))} come from?</p>
        <div id="car_loan_rows">${carFundSourceRowsHtml('loan')}</div>
        <div class="alloc-summary" id="car_loan_summary">Allocated: RM0 / ${fmt(carShortfall('loan'))}</div>
-       <div class="cf-breakdown"><div class="cf-row"><span>Cashflow after loan</span><b class="${loanAfter<0?'neg':''}">${fmt(loanAfter)}/mo</b></div></div>
+       <div class="cf-breakdown"><div class="cf-row"><span>Monthly Balance after loan</span><b class="${loanAfter<0?'neg':''}">${fmt(loanAfter)}/mo</b></div></div>
        <div class="confirm-row"><button class="btn gold" id="car_loan_confirm" disabled onclick="confirmCarFunding('loan')">Confirm</button></div>`;
 
   const keepPanel = `
     <div class="cf-breakdown">
-      <div class="cf-row"><span>Current cashflow</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
+      <div class="cf-row"><span>Current Monthly Balance</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
       <div class="cf-row"><span>Repair costs</span><b class="neg">-${fmt(CAR_OLD_REPAIR_MO)}/mo</b></div>
-      <div class="cf-row cf-total"><span>New cashflow</span><b${cashflowColorStyle(keepAfter)}>${fmt(keepAfter)}/mo</b></div>
+      <div class="cf-row cf-total"><span>New Monthly Balance</span><b${cashflowColorStyle(keepAfter)}>${fmt(keepAfter)}/mo</b></div>
     </div>
     <div class="confirm-row"><button class="btn gold" onclick="confirmCarKeep()">Confirm</button></div>`;
 
@@ -4968,7 +4968,7 @@ function confirmCarCashDirect(){
 }
 function negativeCashflowWarning(){
   return currentNetCF(state)<0
-    ? `<p class="hint" style="color:var(--rose);font-weight:700;margin:10px 0 0;">This will eat into your cash on hand — your monthly cashflow is now negative.</p>`
+    ? `<p class="hint" style="color:var(--rose);font-weight:700;margin:10px 0 0;">This will eat into your cash on hand — your monthly balance is now negative.</p>`
     : '';
 }
 function confirmCarLoanDirect(){
@@ -5217,9 +5217,9 @@ function renderPromotionStage(){
 
   let negativeNotice='';
   if(stillNegative){
-    negativeNotice = `<p class="hint" style="color:var(--rose);font-weight:700;margin:0 0 12px;">Your cashflow is still negative after this promotion — the raise isn't enough to cover your shortfall, so allocation options are unavailable this year.</p>`;
+    negativeNotice = `<p class="hint" style="color:var(--rose);font-weight:700;margin:0 0 12px;">Your monthly balance is still negative after this promotion — the raise isn't enough to cover your shortfall, so allocation options are unavailable this year.</p>`;
   } else if(recoveredByRaise){
-    negativeNotice = `<p class="hint" style="color:var(--ledger-dark);font-weight:700;margin:0 0 12px;">This promotion improves your cashflow! ${fmt(budget)}/mo is left over after covering your prior shortfall — allocate it below.</p>`;
+    negativeNotice = `<p class="hint" style="color:var(--ledger-dark);font-weight:700;margin:0 0 12px;">This promotion improves your monthly balance! ${fmt(budget)}/mo is left over after covering your prior shortfall — allocate it below.</p>`;
   }
 
   const buildChoiceRow = (kind, label) => {
@@ -5478,8 +5478,8 @@ function updatePromoPreview(){
   const el=document.getElementById('promoCfBreakdown');
   if(el){
     el.innerHTML=`
-      <div class="cf-row"><span>Current cashflow</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
-      <div class="cf-row cf-total"><span>New cashflow</span><b${cashflowColorStyle(after)}>${fmt(after)}/mo</b></div>`;
+      <div class="cf-row"><span>Current Monthly Balance</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
+      <div class="cf-row cf-total"><span>New Monthly Balance</span><b${cashflowColorStyle(after)}>${fmt(after)}/mo</b></div>`;
   }
   updatePromoCategoryBar();
 }
@@ -5628,7 +5628,7 @@ function renderMedcardStage(){
       ${adjustBtn}
       ${rows}
       <p id="medcardSurrenderWarn" class="hint" style="display:${anySurrendered?'block':'none'};color:var(--rose);font-weight:700;margin:0 0 12px;">You are more exposed to future medical costs!</p>
-      <p id="medcardNegativeWarn" class="hint" style="display:none;color:var(--rose);font-weight:700;margin:0 0 12px;">This combination would leave you with negative cashflow — choose differently, or adjust your monthly saving above.</p>
+      <p id="medcardNegativeWarn" class="hint" style="display:none;color:var(--rose);font-weight:700;margin:0 0 12px;">This combination would leave you with a negative monthly balance — choose differently, or adjust your monthly saving above.</p>
       <div class="confirm-row">
         <button class="btn gold" id="medcardConfirmBtn" ${allDecided?'':'disabled'} onclick="confirmMedcard()">Confirm</button>
       </div>
@@ -5651,9 +5651,9 @@ function updateMedcardPreview(){
   const delta=after-current;
   if(cfEl){
     cfEl.innerHTML=`
-      <div class="cf-row"><span>Current cashflow</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
+      <div class="cf-row"><span>Current Monthly Balance</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
       <div class="cf-row"><span>Impact on Cashflow</span><b${delta<0?' class="neg"':''}>${delta>=0?'+':''}${fmt(delta)}/mo</b></div>
-      <div class="cf-row cf-total"><span>New cashflow</span><b${cashflowColorStyle(after)}>${fmt(after)}/mo</b></div>`;
+      <div class="cf-row cf-total"><span>New Monthly Balance</span><b${cashflowColorStyle(after)}>${fmt(after)}/mo</b></div>`;
   }
   const warnEl=document.getElementById('medcardSurrenderWarn');
   if(warnEl) warnEl.style.display = covered.some(p=>medcardState[p]==='surrender') ? 'block' : 'none';
@@ -5974,8 +5974,8 @@ const PORTFOLIO_GROUPS=[
     {key:'ASB', dividend:true}
   ]},
   {label:'3rd Portion — Growth', items:[
-    {key:'GOLD', dividend:false},
     {key:'UTEQUITY', dividend:false},
+    {key:'GOLD', dividend:false},
     {key:'SHARE', dividend:false}
   ]}
 ];
@@ -6483,9 +6483,9 @@ function updateInsSummary(){
   const after=current-total;
   if(cfEl){
     cfEl.innerHTML = `
-      <div class="cf-row"><span>Current cashflow</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
+      <div class="cf-row"><span>Current Monthly Balance</span><b${cashflowColorStyle(current)}>${fmt(current)}/mo</b></div>
       <div class="cf-row"><span>Insurance premium</span><b class="neg">-${fmt(total)}/mo</b></div>
-      <div class="cf-row cf-total"><span>New cashflow</span><b${cashflowColorStyle(after)}>${fmt(after)}/mo</b></div>`;
+      <div class="cf-row cf-total"><span>New Monthly Balance</span><b${cashflowColorStyle(after)}>${fmt(after)}/mo</b></div>`;
   }
   // Only block if the insurance itself is what causes the shortfall — if cashflow was
   // already negative beforehand, that's not this page's problem to fix.
@@ -6926,9 +6926,9 @@ function monthlyPctPreview(pct){
 }
 function cfBreakdownHtml(p){
   return `
-    <div class="cf-row"><span>Current cashflow</span><b${cashflowColorStyle(p.before)}>${fmt(p.before)}/mo</b></div>
+    <div class="cf-row"><span>Current Monthly Balance</span><b${cashflowColorStyle(p.before)}>${fmt(p.before)}/mo</b></div>
     <div class="cf-row"><span>Monthly commitment</span><b class="neg">-${fmt(p.commit)}/mo</b></div>
-    <div class="cf-row cf-total"><span>New cashflow</span><b${cashflowColorStyle(p.after)}>${fmt(p.after)}/mo</b></div>`;
+    <div class="cf-row cf-total"><span>New Monthly Balance</span><b${cashflowColorStyle(p.after)}>${fmt(p.after)}/mo</b></div>`;
 }
 function onPctInput(){
   divState.monthlyPct=Number(document.getElementById('pctSlider').value);
@@ -7001,7 +7001,7 @@ function saveAdjustedSavings(){
   const fb=document.getElementById('feedback');
   if(fb && fb.textContent && !(currentEvent && currentEvent.id==='property')){
     const newCF=currentNetCF(state);
-    fb.innerHTML = fb.textContent.replace(/\s*New cashflow now:.*$/,'') + ` New cashflow now: RM${newCF.toLocaleString()}/mo.`;
+    fb.innerHTML = fb.textContent.replace(/\s*New (monthly )?balance now:.*$/,'') + ` New monthly balance now: RM${newCF.toLocaleString()}/mo.`;
   }
   // if the insurance page is currently open, refresh its premium total, cashflow preview, and Confirm button state
   if(document.getElementById('insCfBreakdown')){ updateInsSummary(); }
