@@ -565,28 +565,14 @@ select.instrument-select{
 <div class="app">
 
   <!-- TITLE -->
-  <!-- LANGUAGE SELECTION -->
-  <section id="screen-language" class="screen active">
+  <section id="screen-title" class="screen active">
     <div class="passbook">
       <div class="head">
         <h1 class="title">Retirement Journey</h1>
       </div>
       <div class="passbook-inner">
-        <p class="hint" style="text-align:center;margin:0 0 16px;">Choose your language &middot; Pilih bahasa anda &middot; 请选择语言</p>
-        <button class="btn gold" style="width:100%;margin-bottom:10px;" onclick="setLanguage('ms')">Bahasa Melayu</button>
-        <button class="btn gold" style="width:100%;" onclick="setLanguage('en')">English</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="screen-title" class="screen">
-    <div class="passbook">
-      <div class="head">
-        <h1 class="title" data-i18n="appTitle">Retirement Journey</h1>
-      </div>
-      <div class="passbook-inner">
       <button class="btn ghost" id="resumeBtn" style="display:none;width:100%;margin-bottom:10px;" onclick="resumeGame()"></button>
-      <button class="btn gold" onclick="goTo('screen-code')" data-i18n="enterCode">Enter Code &rarr;</button>
+      <button class="btn gold" onclick="goTo('screen-code')">Enter Code &rarr;</button>
     </div></div>
   </section>
 
@@ -594,8 +580,8 @@ select.instrument-select{
   <section id="screen-code" class="screen">
     <div class="passbook">
       <div class="head">
-        <p class="eyebrow" data-i18n="stepOfTwo">Step 1 of 2</p>
-        <h1 class="title" style="font-size:20px;" data-i18n="enterYourCode">Enter Your Code</h1>
+        <p class="eyebrow">Step 1 of 2</p>
+        <h1 class="title" style="font-size:20px;">Enter Your Code</h1>
       </div>
       <div class="passbook-inner">
       <div class="code-display" id="codeDisplay">
@@ -617,10 +603,10 @@ select.instrument-select{
         <button class="key" data-key="8">8</button>
         <button class="key" data-key="9">9</button>
         <button class="key" data-key="0">0</button>
-        <button class="key key-wide" data-action="clear" data-i18n="clear">Clear</button>
+        <button class="key key-wide" data-action="clear">Clear</button>
       </div>
       <p class="code-hint" id="codeError" style="color:var(--rose); min-height:16px;"></p>
-      <button id="codeContinueBtn" class="btn gold" disabled onclick="resolveCode()" style="width:100%;margin-top:8px;" data-i18n="continueArrow">Continue &rarr;</button>
+      <button id="codeContinueBtn" class="btn gold" disabled onclick="resolveCode()" style="width:100%;margin-top:8px;">Continue &rarr;</button>
     </div></div>
   </section>
 
@@ -629,7 +615,7 @@ select.instrument-select{
     <div class="passbook">
       <div class="passbook-inner" style="padding-top:28px;">
       <div id="profileCard"></div>
-      <button id="startBtn" class="btn gold" style="width:100%;margin-top:16px;" onclick="startGame()" data-i18n="beginAt45">Begin at 45 &rarr;</button>
+      <button id="startBtn" class="btn gold" style="width:100%;margin-top:16px;" onclick="startGame()">Begin at 45 &rarr;</button>
     </div></div>
   </section>
 
@@ -638,13 +624,13 @@ select.instrument-select{
     <div class="passbook">
       <div class="hud">
         <div class="who" id="hudName">&mdash;<span id="hudStyle"></span></div>
-        <div class="age-badge"><b id="hudAge">45</b><small data-i18n="yearsOld">Years Old</small></div>
+        <div class="age-badge"><b id="hudAge">45</b><small>Years Old</small></div>
       </div>
       <div class="passbook-inner" style="padding-top:20px;">
       <div class="fin-grid" id="finGrid"></div>
       <div class="meters">
-        <div class="meter energy"><div class="label"><span data-i18n="energyLabel">&#9889; Energy</span><span id="energyNum">8/10</span></div><div class="bar"><i id="energyBar" style="width:80%"></i></div></div>
-        <div class="meter family"><div class="label"><span data-i18n="familyLabel">&#10084;&#65039; Family</span><span id="familyNum">5/10</span></div><div class="bar"><i id="familyBar" style="width:50%"></i></div></div>
+        <div class="meter energy"><div class="label"><span>&#9889; Energy</span><span id="energyNum">8/10</span></div><div class="bar"><i id="energyBar" style="width:80%"></i></div></div>
+        <div class="meter family"><div class="label"><span>&#10084;&#65039; Family</span><span id="familyNum">5/10</span></div><div class="bar"><i id="familyBar" style="width:50%"></i></div></div>
       </div>
       <div id="stepArea"></div>
     </div></div>
@@ -759,10 +745,10 @@ const COMPANY = 'Meridian Bhd';
 const INSTRUMENTS = {
   EMERGENCY:{label:'Emergency Fund',       rate:0,     volatile:false},
   FD:       {label:'Fixed Deposit',        rate:0.025, volatile:false},
-  ENDOWMENT:{label:'Endowment Plan',       rate:0.04,  volatile:false},
+  ENDOWMENT:{label:'Endowment Saving Plan', rate:0.04,  volatile:false},
   ASB:      {label:'ASB / ASM',            rate:0.05, volatile:false},
   UTBOND:   {label:'Unit Trust — Bond',    rate:0.05,  volatile:false},
-  UTEQUITY: {label:'Unit Trust — Equity',  rate:0.08,  volatile:true},
+  UTEQUITY: {label:'Unit Trust',           rate:0.08,  volatile:true},
   SHARE:    {label:'Share Market',         rate:0.09,  volatile:true},
   GOLD:     {label:'Gold (Emas)',          rate:0.07,  volatile:true},
   SHAREDIV: {label:'Share Dividend',       rate:0.045, volatile:false},
@@ -906,7 +892,7 @@ function renderEndowPayoutStage(){
     area.innerHTML=`
       <div class="event-card">
         <span class="icon">🎓</span>
-        <h3>Endowment Plan Payout</h3>
+        <h3>Endowment Saving Plan Payout</h3>
         <p class="scenario">No endowment plan found.</p>
         <div class="confirm-row">
           <button class="btn gold" onclick="confirmEndowPayout()">Continue &rarr;</button>
@@ -920,8 +906,8 @@ function renderEndowPayoutStage(){
   area.innerHTML=`
     <div class="event-card">
       <span class="icon">🎓</span>
-      <h3>Endowment Plan Payout</h3>
-      <p class="scenario">Your Endowment Plan matures today.</p>
+      <h3>Endowment Saving Plan Payout</h3>
+      <p class="scenario">Your Endowment Saving Plan matures today.</p>
       <div class="cf-breakdown" style="border-top:none;margin-top:0;">
         <div class="cf-row"><span>Capital Paid</span><b>${fmt(principal)}</b></div>
         <div class="cf-row"><span>Compounded Return (188% Maturity Benefit)</span><b>${fmt(compoundedReturn)}</b></div>
@@ -1206,7 +1192,7 @@ const EV_WITHDRAW_EPF = {age:56,id:'withdrawepf',icon:'🏦',title:'Withdraw EPF
   ],
   effect:(s,key)=>{
     if(key==='all'){ s.cash+=s.epf; const amt=s.epf; s.epf=0; return {text:`RM${Math.round(amt).toLocaleString()} withdrawn from EPF into cash.`}; }
-    if(key==='split'){ const total=s.epf; s.cash+=total*0.4; s.lots.push({type:'UTBOND',amount:Math.round(total*0.3)}); s.lots.push({type:'UTEQUITY',amount:Math.round(total*0.3)}); s.epf=0;
+    if(key==='split'){ const total=s.epf; s.cash+=total*0.4; s.lots.push({type:'ASB',amount:Math.round(total*0.3)}); s.lots.push({type:'UTEQUITY',amount:Math.round(total*0.3)}); s.epf=0;
       return {text:'EPF split: 40/30/30 split.'}; }
     return {text:'EPF savings stay put, still earning dividends.'};
   }};
@@ -1246,9 +1232,9 @@ const EV_QURBAN = {age:73,id:'qurban',icon:'🐐',title:'Qurban during Hari Raya
     return {text:'No Qurban contribution this year.'};
   }};
 
-const EV_ENDOWMENT_PAYOUT_65 = {age:65, id:'endowpayout65', custom:'endowpayout', icon:'🎓', title:'Endowment Plan Payout', payoutBoughtAge:45};
+const EV_ENDOWMENT_PAYOUT_65 = {age:65, id:'endowpayout65', custom:'endowpayout', icon:'🎓', title:'Endowment Saving Plan Payout', payoutBoughtAge:45};
 const EV_ENDING65 = {age:65, id:'ending65', custom:'ending65', icon:'🌅', title:'Your Retirement Story'};
-const EV_ENDOWMENT_PAYOUT_70 = {age:70, id:'endowpayout70', custom:'endowpayout', icon:'🎓', title:'Endowment Plan Payout', payoutBoughtAge:50};
+const EV_ENDOWMENT_PAYOUT_70 = {age:70, id:'endowpayout70', custom:'endowpayout', icon:'🎓', title:'Endowment Saving Plan Payout', payoutBoughtAge:50};
 
 function mkEstatePlanning(label){ return {age:70,id:'estate',icon:'✍️',title:label,
   picture:"A lawyer's desk with an estate document ready for signature.",
@@ -1552,9 +1538,9 @@ function updateHud(){
     ? `Monthly Expenses (${(RETIREMENT_LIFESTYLES.find(l=>l.pct===state.retirementLifestylePct)||{label:state.retirementLifestylePct+'%'}).label})`
     : 'Monthly Expenses';
   const tiles=[
-    [t('cashOnHand'),state.cash,fmt(state.cash),true],
-    [t('cashFlow'),cashflow,fmt(cashflow)+'/mo',true],
-    [t('epf'),state.epf,fmt(state.epf),false],
+    ['Cash on Hand',state.cash,fmt(state.cash),true],
+    ['Cash Flow',cashflow,fmt(cashflow)+'/mo',true],
+    ['EPF',state.epf,fmt(state.epf),false],
     ['Invest.',invTotal,fmt(invTotal),false],
     ['Active Income',activeIncome,fmt(activeIncome)+'/mo',false],
     ['Passive Income',passiveIncome,fmt(passiveIncome)+'/mo',false],
@@ -1807,8 +1793,8 @@ function finishEvent(logText){
 
 /* ---------- Diversify Your Investments (age 45, custom multi-stage) ---------- */
 let divState=null;
-const DIVERSIFY_MENU=['EMERGENCY','FD','ENDOWMENT','ASB','UTBOND','UTEQUITY','GOLD','SHARE','PROPERTY'];
-const MONTHLY_MENU=['ASB','UTBOND','UTEQUITY','SHARE'];
+const DIVERSIFY_MENU=['EMERGENCY','FD','ENDOWMENT','ASB','UTEQUITY','GOLD','SHARE','PROPERTY'];
+const MONTHLY_MENU=['ASB','UTEQUITY'];
 const RISK_CATEGORY={CASH:'safety', EMERGENCY:'safety', FD:'safety', ENDOWMENT:'stable', ASB:'stable', UTBOND:'stable', UTEQUITY:'growth', GOLD:'growth', SHARE:'growth', SHAREDIV:'stable', EPF:'stable'};
 const CATEGORY_LABEL={safety:'Safety First', stable:'Stable', growth:'Growth'};
 /* Investment property: down payment is fixed at RM30,000. The installment is capped
@@ -1867,7 +1853,7 @@ function insRowHtml(key){
 }
 /* ---------- 20% Year-End Bonus (age 49, custom multi-select) ---------- */
 let bonusState=null;
-const BONUS_INVEST_MENU=['FD','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const BONUS_INVEST_MENU=['FD','ASB','UTEQUITY','GOLD','SHARE'];
 function bonusAmount(){ return Math.round(state.gross*12*0.20); }
 function bonusAllocatedTotal(){
   let t=0;
@@ -2448,7 +2434,7 @@ function confirmEpfWithdraw(){
 
 /* ---------- Endowment Plan Maturity (auto pop-up, 20 years after purchase) ---------- */
 let endowMatureState=null;
-const ENDOW_MATURE_MENU=['FD','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const ENDOW_MATURE_MENU=['FD','ASB','UTEQUITY','GOLD','SHARE'];
 function endowMaturedAmount(){ return currentEvent.maturedLot.amount; }
 function endowMatureAllocatedTotal(){
   let t=0;
@@ -2505,8 +2491,8 @@ function renderEndowMatureStage(){
   area.innerHTML=`
     <div class="event-card">
       <span class="icon">🎓</span>
-      <h3>Endowment Plan Matured!</h3>
-      <p class="scenario">Your Endowment Plan bought 20 years ago has matured and paid out.</p>
+      <h3>Endowment Saving Plan Matured!</h3>
+      <p class="scenario">Your Endowment Saving Plan bought 20 years ago has matured and paid out.</p>
       <div class="stat-pair" style="grid-template-columns:1fr;">
         <div class="stat-tile"><span class="stat-label">Matured Amount</span><span class="stat-value">${fmt(maturedAmt)}</span></div>
       </div>
@@ -2620,7 +2606,7 @@ function confirmEndowMature(){
 /* ---------- Umrah dan Ziarah (age 50, Muslim only, custom) ---------- */
 let umrahState=null;
 const HAJJ_COST=160000;
-const HAJJ_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const HAJJ_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function hajjSourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -2789,7 +2775,7 @@ function confirmHajjFunding(){
 /* ---------- Son's Wedding (age 59, Muslim, custom, mirrors Hajj) ---------- */
 let weddingState=null;
 const WEDDING_COST=60000;
-const WEDDING_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const WEDDING_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function weddingSourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -2958,7 +2944,7 @@ function confirmWeddingFunding(){
 /* ---------- Son Overseas Study (age 59, Non-Muslim, custom, mirrors Hajj) ---------- */
 let sonStudyState=null;
 const SON_STUDY_COST=200000;
-const SON_STUDY_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const SON_STUDY_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function sonStudySourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -3127,7 +3113,7 @@ function confirmSonStudyFunding(){
 /* ---------- Spouse's Hospital Admission (custom: mirrors the Critical Illness funding format) ---------- */
 let spouseHospState=null;
 const SPOUSEHOSP_CASH_SOURCES=['CASH','EMERGENCY'];
-const SPOUSEHOSP_INVEST_SOURCES=['FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const SPOUSEHOSP_INVEST_SOURCES=['FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function spouseHospCovered(){ return insCovers(state,'medical','spouse'); }
 function spouseHospCost(){ return spouseHospCovered() ? 5000 : 75000; }
 function spouseHospActiveSources(){ return [...SPOUSEHOSP_CASH_SOURCES, ...SPOUSEHOSP_INVEST_SOURCES]; }
@@ -3271,7 +3257,7 @@ function confirmSpouseHospFunding(){
 /* ---------- Legacy Planning (age 66, custom, mirrors Hajj + adds a recurring commitment) ---------- */
 let legacyPlanState=null;
 const LEGACY_PLAN_FEE=2000;
-const LEGACY_PLAN_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const LEGACY_PLAN_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function legacyPlanSourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -3472,7 +3458,7 @@ function confirmLegacyPlanFunding(){
 
 /* ---------- LHDN Check! (age 68, custom: tax on rental income, or no-impact message) ---------- */
 let lhdnState=null;
-const LHDN_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const LHDN_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function lhdnRentalTax(){
   const history=state.rentalHistory||[];
   const last7=history.slice(-7);
@@ -3703,7 +3689,7 @@ function confirmEndDay(){
 /* ---------- Franchise Business Closes Down (age 55, non-Muslim, custom) ---------- */
 let franchiseCloseState=null;
 const FRANCHISE_CLOSE_DEBT=15000;
-const FRANCHISE_CLOSE_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const FRANCHISE_CLOSE_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function franchiseCloseSourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -3860,7 +3846,7 @@ function confirmFranchiseClose(){
 
 /* ---------- Debt Settlement (custom: list debts, settle or continue) ---------- */
 let debtCheckState=null;
-const DEBTCHECK_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const DEBTCHECK_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function debtCheckSourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -3943,7 +3929,7 @@ function renderDebtCheckStage(){
       const income = dividendEligible ? Math.round(state.epf*0.05/12) : 0;
       stableRows.push({label:'EPF', amount:state.epf, icon:'🏦', income});
     }
-    ['ASB','UTBOND','SHAREDIV','ENDOWMENT'].forEach(key=>{
+    ['ASB','ENDOWMENT'].forEach(key=>{
       const total=lotTotal(key);
       if(total>0){
         const label = key==='ASB' ? (state.isMuslim?'ASB':'ASM') : INSTRUMENTS[key].label;
@@ -4165,7 +4151,7 @@ function applyDebtSettlement(){
 /* ---------- Retirement Holiday (custom: Hajj-style Go/fund-source) ---------- */
 let retirementHolidayState=null;
 const RETIREMENT_HOLIDAY_COST=50000;
-const RETIREMENT_HOLIDAY_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const RETIREMENT_HOLIDAY_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function retirementHolidaySourceBalance(key){
   if(key==='EPF') return Math.round(state.epf);
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -4333,7 +4319,7 @@ function confirmRetirementHoliday(){
 
 
 const UMRAH_COST=24000;
-const UMRAH_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const UMRAH_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function umrahSourceBalance(key){
   if(key==='EPF') return epfWithdrawableRemaining();
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -4503,7 +4489,7 @@ function confirmUmrahFunding(){
 /* ---------- Franchise Business Offer (age 50, Non-Muslim, custom) ---------- */
 let franchiseState=null;
 const FRANCHISE_COST=100000;
-const FRANCHISE_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const FRANCHISE_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function franchiseSourceBalance(key){
   if(key==='EPF') return epfWithdrawableRemaining();
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -4691,7 +4677,7 @@ function confirmFranchiseFunding(){
 /* ---------- House Renovation (custom, reused at multiple ages) ---------- */
 let renoState=null;
 const RENO_COST=80000;
-const RENO_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const RENO_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function renoSourceBalance(key){
   if(key==='EPF') return epfWithdrawableRemaining();
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -4868,7 +4854,7 @@ const CAR_TERM_YEARS=5;
 const CAR_RATE=0.03;
 const CAR_INSTALLMENT=Math.round(CAR_LOAN*(1+CAR_RATE*CAR_TERM_YEARS)/(CAR_TERM_YEARS*12));
 const CAR_OLD_REPAIR_MO=Math.round(8000/12);
-const CAR_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const CAR_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function carSourceBalance(key){
   if(key==='EPF') return epfWithdrawableRemaining();
   return Math.round(state.lots.filter(l=>l.type===key).reduce((s,l)=>s+l.amount,0));
@@ -5705,7 +5691,7 @@ function confirmMedcard(){
 
 /* ---------- Critical Illness Hits! (age 54, custom: payout claim or fund-source withdrawal) ---------- */
 let ciState=null;
-const CI_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const CI_SOURCE_LOTS=['EMERGENCY','FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function ciExpenseIncreaseMonthly(){ return Math.round(state.expenses*0.20); }
 function ciExpensesAfterMonthly(){ return state.ciDiagnosed ? state.expenses : Math.round(state.expenses*1.20); }
 function ciInstallmentList(){
@@ -5725,7 +5711,7 @@ function ciAnnualNeed(){
   return Math.round(ciExpensesAfterMonthly()*12 + ciAnnualInstallments());
 }
 const CI_CASH_SOURCES=['CASH','EMERGENCY'];
-const CI_INVEST_SOURCES=['FD','EPF','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const CI_INVEST_SOURCES=['FD','EPF','ASB','UTEQUITY','GOLD','SHARE'];
 function ciSourceBalance(key){
   if(key==='CASH') return Math.round(state.cash);
   if(key==='EPF') return epfWithdrawableRemaining();
@@ -5985,9 +5971,7 @@ const PORTFOLIO_GROUPS=[
   ]},
   {label:'2nd Portion — Stable', items:[
     {key:'EPF', dividend:true, rateOverride:0.05},
-    {key:'ASB', dividend:true},
-    {key:'UTBOND', dividend:true},
-    {key:'SHAREDIV', dividend:true}
+    {key:'ASB', dividend:true}
   ]},
   {label:'3rd Portion — Growth', items:[
     {key:'GOLD', dividend:false},
@@ -6127,7 +6111,7 @@ function renderCareer55Stage(){
     <div class="event-card">
       <span class="icon">📋</span>
       <h3>Portfolio Review</h3>
-      ${careerLockedEndowmentValue()>0?`<p class="hint" style="margin:0 0 12px;">${fmt(careerLockedEndowmentValue())} of your wealth is in an Endowment Plan that's locked until it matures \u2014 it stays untouched and isn't part of what you allocate below.</p>`:''}
+      ${careerLockedEndowmentValue()>0?`<p class="hint" style="margin:0 0 12px;">${fmt(careerLockedEndowmentValue())} of your wealth is in an Endowment Saving Plan that's locked until it matures \u2014 it stays untouched and isn't part of what you allocate below.</p>`:''}
       <div class="cf-breakdown" style="border-top:none;margin-top:0;">
         <div class="cf-row"><span>Monthly Expenses${chosenLifestyle?` <span style="color:var(--tan-dark);">(${chosenLifestyle.label} &mdash; ${lifestyleReduction>0?`-${lifestyleReduction}%`:'no reduction'})</span>`:''}</span><b>${fmt(lifestyleExpenses)}</b></div>
         <div class="cf-row"><span>Loan Commitment</span><b>${fmt(loanCommitment)}</b></div>
@@ -6429,7 +6413,7 @@ function confirmPortfolioReview(){
   if(lockedEndowments.length){
     state.lots.push(...lockedEndowments);
     const lockedTotal=careerLockedEndowmentValue();
-    cards.push(`<div class="protection-card"><span class="p-icon">📜</span><div class="p-info"><div class="p-name">Endowment Plan (locked until maturity)</div><div class="p-detail">${fmt(lockedTotal)}</div></div></div>`);
+    cards.push(`<div class="protection-card"><span class="p-icon">📜</span><div class="p-info"><div class="p-name">Endowment Saving Plan (locked until maturity)</div><div class="p-detail">${fmt(lockedTotal)}</div></div></div>`);
   }
   state.cash=cashChosen;
   cards.push(`<div class="protection-card"><span class="p-icon">💵</span><div class="p-info"><div class="p-name">Cash</div><div class="p-detail">${fmt(cashChosen)}</div></div></div>`);
@@ -6769,7 +6753,7 @@ function onPctAllocInput(key){
   if(val>0 && chk && !chk.checked){ chk.checked=true; document.getElementById('row_'+key).classList.add('checked'); }
   updateAllocSummary();
 }
-const OTHER_INSTRUMENTS_ORDER=['FD','ENDOWMENT','ASB','UTBOND','UTEQUITY','GOLD','SHARE'];
+const OTHER_INSTRUMENTS_ORDER=['FD','ENDOWMENT','ASB','UTEQUITY','GOLD','SHARE'];
 function otherInstrumentsAvailable(){
   let balance = state.cash - getAllocAmount('EMERGENCY');
   const propChk=document.getElementById('chk_PROPERTY');
