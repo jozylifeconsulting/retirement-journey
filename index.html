@@ -1346,7 +1346,7 @@ const TRANSLATIONS={
     diversifyTitle:'Diversify Your investments', keepAsCashBtn:'Keep as cash', diversifyBtn:'Diversify',
     available:'Available', allocated:'Allocated', balanceToAllocate:'Balance to Allocate',
     baseMonthlyExpenses:'Base Monthly Expenses:', yourInvestmentMix:'Your Investment Mix',
-    safetyFirst:'Safety First', stable:'Stable', growth:'Growth',
+    safetyFirst:'Safe', stable:'Stable', growth:'Growth',
     otherInvestmentTools:'All other investment tools (%)',
     buildYourRetirement:'Build Your Retirement', no:'No', yes:'Yes',
     pctOfRemaining:'% of remaining balance', amountAllocated:'Amount Allocated',
@@ -1796,7 +1796,7 @@ let divState=null;
 const DIVERSIFY_MENU=['EMERGENCY','FD','ENDOWMENT','ASB','UTEQUITY','GOLD','SHARE','PROPERTY'];
 const MONTHLY_MENU=['ASB','UTEQUITY'];
 const RISK_CATEGORY={CASH:'safety', EMERGENCY:'safety', FD:'safety', ENDOWMENT:'stable', ASB:'stable', UTBOND:'stable', UTEQUITY:'growth', GOLD:'growth', SHARE:'growth', SHAREDIV:'stable', EPF:'stable'};
-const CATEGORY_LABEL={safety:'Safety First', stable:'Stable', growth:'Growth'};
+const CATEGORY_LABEL={safety:'Safe', stable:'Stable', growth:'Growth'};
 /* Investment property: down payment is fixed at RM30,000. The installment is capped
    at 20% of the player's own gross salary AT AGE 45 (individual to each character) and
    stays fixed for the full 20-year tenure (age 45 to 65). Rental income is a constant
@@ -1864,7 +1864,7 @@ function bonusAllocatedTotal(){
 }
 function bonusCategoryTotals(){
   const totals={safety:0, stable:0, growth:0};
-  state.lots.forEach(l=>{ const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
+  state.lots.forEach(l=>{ if(l.type==='EMERGENCY') return; const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
   BONUS_INVEST_MENU.forEach(k=>{
     const amt=bonusState.invest[k]||0;
     const cat=RISK_CATEGORY[k];
@@ -1928,7 +1928,7 @@ function renderBonusStage(){
           <span class="ret" id="bonus_emergency_ret">${emergencyRetText(currentEmergency)}</span>
         </div>
         <div class="alloc-body">
-          <p class="code-hint" id="bonusEmergencyTopupHint" style="margin:0 0 8px;">Suggested emergency fund: ${fmt(totalOutflow*3)} to ${fmt(totalOutflow*6)} (3&ndash;6 months of your total monthly outflow).</p>
+          <p class="code-hint" id="bonusEmergencyTopupHint" style="margin:0 0 8px;">Suggested emergency fund: ${fmt(totalOutflow*3)} to ${fmt(totalOutflow*6)} (3&ndash;6 months of your total monthly expenses).</p>
           <div class="val-row">
             <input type="text" inputmode="numeric" id="bonus_emergency_amt" value="0" oninput="formatMoneyInput(this);onBonusEmergencyInput()">
             <button type="button" class="max-btn" onclick="setBonusEmergencyMax()">Max</button>
@@ -2054,9 +2054,9 @@ function refreshEmergencyRet(){
     const minTarget = totalOutflow*3;
     const gap = minTarget-total;
     if(gap>0){
-      topupEl.innerHTML=`Suggested emergency fund: ${fmt(totalOutflow*3)} to ${fmt(totalOutflow*6)} (3&ndash;6 months of your total monthly outflow). <b style="color:var(--rose);">Top up ${fmt(gap)} more to reach the minimum.</b>`;
+      topupEl.innerHTML=`Suggested emergency fund: ${fmt(totalOutflow*3)} to ${fmt(totalOutflow*6)} (3&ndash;6 months of your total monthly expenses). <b style="color:var(--rose);">Top up ${fmt(gap)} more to reach the minimum.</b>`;
     } else {
-      topupEl.innerHTML=`Suggested emergency fund: ${fmt(totalOutflow*3)} to ${fmt(totalOutflow*6)} (3&ndash;6 months of your total monthly outflow). <b style="color:var(--ledger);">You're within the recommended range.</b>`;
+      topupEl.innerHTML=`Suggested emergency fund: ${fmt(totalOutflow*3)} to ${fmt(totalOutflow*6)} (3&ndash;6 months of your total monthly expenses). <b style="color:var(--ledger);">You're within the recommended range.</b>`;
     }
   }
 }
@@ -2309,7 +2309,7 @@ function onEpfWithdrawPctNumInput(){
 }
 function epfWithdrawCategoryTotals(){
   const totals={safety:0, stable:0, growth:0};
-  state.lots.forEach(l=>{ const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
+  state.lots.forEach(l=>{ if(l.type==='EMERGENCY') return; const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
   EPF_WITHDRAW_MENU.forEach(k=>{
     const amt=epfWithdrawGetAmount(k);
     const cat=RISK_CATEGORY[k];
@@ -2443,7 +2443,7 @@ function endowMatureAllocatedTotal(){
 }
 function endowMatureCategoryTotals(){
   const totals={safety:0, stable:0, growth:0};
-  state.lots.forEach(l=>{ if(l===currentEvent.maturedLot) return; const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
+  state.lots.forEach(l=>{ if(l===currentEvent.maturedLot || l.type==='EMERGENCY') return; const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
   ENDOW_MATURE_MENU.forEach(k=>{
     const amt=(endowMatureState.invest[k]||0);
     const cat=RISK_CATEGORY[k];
@@ -2507,7 +2507,7 @@ function renderEndowMatureStage(){
         <div class="category-box" style="margin:0 0 12px;">
           <div class="category-bar" id="endowCategoryBar"><div class="seg safety" style="width:0%"></div><div class="seg stable" style="width:0%"></div><div class="seg growth" style="width:0%"></div></div>
           <div class="category-legend" id="endowCategoryLegend">
-            <span class="leg-item"><span class="dot safety"></span>Safety First 0%</span>
+            <span class="leg-item"><span class="dot safety"></span>Safe 0%</span>
             <span class="leg-item"><span class="dot stable"></span>Stable 0%</span>
             <span class="leg-item"><span class="dot growth"></span>Growth 0%</span>
           </div>
@@ -5148,7 +5148,7 @@ function promotionBudget(){
 }
 function promotionCategoryTotals(){
   const totals={safety:0, stable:0, growth:0};
-  state.lots.forEach(l=>{ const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
+  state.lots.forEach(l=>{ if(l.type==='EMERGENCY') return; const cat=RISK_CATEGORY[l.type]; if(cat) totals[cat]+=l.amount; });
   if(promoState.saving){
     const annualAmount=promotionSavingAmount()*12;
     const chosen=Object.keys(promoState.instruments).filter(k=>promoState.instruments[k]);
@@ -5210,9 +5210,11 @@ function renderPromotionStage(){
 
   const savingInstruments = MONTHLY_MENU.map(key=>{
     const label = key==='ASB' ? (state.isMuslim?'ASB':'ASM') : INSTRUMENTS[key].label;
+    const catLabel = CATEGORY_LABEL[RISK_CATEGORY[key]] || '';
+    const rate = (instrumentRate(key, state.isMuslim)*100).toFixed(1);
     const isActive = promoState.instruments[key] ? 'active' : '';
     return `
-      <button type="button" class="who-pill ${isActive}" id="promo_instr_${key}" onclick="togglePromoInstrument('${key}')" ${stillNegative?'disabled':''}>${label}</button>`;
+      <button type="button" class="who-pill ${isActive}" id="promo_instr_${key}" onclick="togglePromoInstrument('${key}')" ${stillNegative?'disabled':''}>${label} <span style="opacity:.7;font-weight:400;">— ${catLabel}, ~${rate}%/yr</span></button>`;
   }).join('');
 
   let negativeNotice='';
@@ -5296,7 +5298,7 @@ function renderPromotionStage(){
             <p class="hint" style="margin:0 0 8px;">Your Investment Mix</p>
             <div class="category-bar" id="promoCategoryBar"><div class="seg safety" style="width:0%"></div><div class="seg stable" style="width:0%"></div><div class="seg growth" style="width:0%"></div></div>
             <div class="category-legend" id="promoCategoryLegend">
-              <span class="leg-item"><span class="dot safety"></span>Safety First 0%</span>
+              <span class="leg-item"><span class="dot safety"></span>Safe 0%</span>
               <span class="leg-item"><span class="dot stable"></span>Stable 0%</span>
               <span class="leg-item"><span class="dot growth"></span>Growth 0%</span>
             </div>
@@ -5658,7 +5660,19 @@ function updateMedcardPreview(){
   const warnEl=document.getElementById('medcardSurrenderWarn');
   if(warnEl) warnEl.style.display = covered.some(p=>medcardState[p]==='surrender') ? 'block' : 'none';
   const negWarnEl=document.getElementById('medcardNegativeWarn');
-  if(negWarnEl) negWarnEl.style.display = (covered.every(p=>medcardState[p]) && after<0) ? 'block' : 'none';
+  if(negWarnEl){
+    if(covered.every(p=>medcardState[p]) && after<0){
+      negWarnEl.style.display='block';
+      negWarnEl.style.color='var(--rose)';
+      negWarnEl.textContent='This combination would leave you with a negative monthly balance — choose differently, or adjust your monthly saving above.';
+    } else if(covered.every(p=>medcardState[p]) && after>=0 && state.monthlySaving){
+      negWarnEl.style.display='block';
+      negWarnEl.style.color='var(--ledger)';
+      negWarnEl.textContent='Your monthly balance is positive — you can confirm and continue.';
+    } else {
+      negWarnEl.style.display='none';
+    }
+  }
   const confirmBtn=document.getElementById('medcardConfirmBtn');
   if(confirmBtn) confirmBtn.disabled = !covered.every(p=>medcardState[p]) || after<0;
 }
@@ -6099,7 +6113,7 @@ function renderCareer55Stage(){
             <span class="ret">${(key==='EMERGENCY'||key==='CASH')?'':`~${(rate*100).toFixed(1)}%/yr`}</span>
           </div>
           <div class="alloc-body">
-            ${key==='EMERGENCY' ? `<p class="code-hint" id="portfolioEmergencyTopupHint" style="margin:-6px 0 14px;">Suggested emergency fund: ${fmt(combinedMonthly*3)} to ${fmt(combinedMonthly*6)} (3&ndash;6 months of your total monthly outflow).</p>` : ''}
+            ${key==='EMERGENCY' ? `<p class="code-hint" id="portfolioEmergencyTopupHint" style="margin:-6px 0 14px;">Suggested emergency fund: ${fmt(combinedMonthly*3)} to ${fmt(combinedMonthly*6)} (3&ndash;6 months of your total monthly expenses).</p>` : ''}
             ${inputHtml}
           </div>
         </div>`;
@@ -6131,7 +6145,7 @@ function renderCareer55Stage(){
         <p class="hint" style="margin:0 0 8px;">Your Investment Mix</p>
         <div class="category-bar" id="portfolioCategoryBar"><div class="seg safety" style="width:0%"></div><div class="seg stable" style="width:0%"></div><div class="seg growth" style="width:0%"></div></div>
         <div class="category-legend" id="portfolioCategoryLegend">
-          <span class="leg-item"><span class="dot safety"></span>Safety First 0%</span>
+          <span class="leg-item"><span class="dot safety"></span>Safe 0%</span>
           <span class="leg-item"><span class="dot stable"></span>Stable 0%</span>
           <span class="leg-item"><span class="dot growth"></span>Growth 0%</span>
         </div>
@@ -6335,6 +6349,7 @@ function setPortfolioMaxPct(key){
 function portfolioCategoryTotals(){
   const totals={safety:0, stable:0, growth:0};
   PORTFOLIO_MENU.forEach(k=>{
+    if(k==='EMERGENCY' || k==='CASH') return; // excluded from the investment mix bar, same as Diversify
     const amt=careerState.instruments[k]||0;
     const cat=RISK_CATEGORY[k];
     if(cat) totals[cat]+=amt;
@@ -6370,9 +6385,9 @@ function updatePortfolioPreview(){
     const minTarget = combinedMonthly*3;
     const gap = minTarget-emergAmt;
     if(gap>0){
-      topupEl.innerHTML=`Suggested emergency fund: ${fmt(combinedMonthly*3)} to ${fmt(combinedMonthly*6)} (3&ndash;6 months of your total monthly outflow). <b style="color:var(--rose);">Top up ${fmt(gap)} more to reach the minimum.</b>`;
+      topupEl.innerHTML=`Suggested emergency fund: ${fmt(combinedMonthly*3)} to ${fmt(combinedMonthly*6)} (3&ndash;6 months of your total monthly expenses). <b style="color:var(--rose);">Top up ${fmt(gap)} more to reach the minimum.</b>`;
     } else {
-      topupEl.innerHTML=`Suggested emergency fund: ${fmt(combinedMonthly*3)} to ${fmt(combinedMonthly*6)} (3&ndash;6 months of your total monthly outflow). <b style="color:var(--ledger);">You're within the recommended range.</b>`;
+      topupEl.innerHTML=`Suggested emergency fund: ${fmt(combinedMonthly*3)} to ${fmt(combinedMonthly*6)} (3&ndash;6 months of your total monthly expenses). <b style="color:var(--ledger);">You're within the recommended range.</b>`;
     }
   }
   const TOLERANCE=10;
@@ -6440,6 +6455,7 @@ function renderInsuranceStage(){
       ${insRowHtml('ci')}
       <div class="alloc-summary" id="insSummary">Total: RM0/mo</div>
       <div class="cf-breakdown" id="insCfBreakdown"></div>
+      <p id="insNegativeWarn" class="hint" style="display:none;font-weight:700;margin:0 0 12px;"></p>
       <div class="confirm-row">
         <button class="btn gold" id="insConfirmBtn" onclick="confirmInsurance()">Confirm</button>
       </div>
@@ -6492,6 +6508,20 @@ function updateInsSummary(){
   const blocked = after<0 && current>=0;
   const confirmBtn=document.getElementById('insConfirmBtn');
   if(confirmBtn) confirmBtn.disabled=blocked;
+  const negWarnEl=document.getElementById('insNegativeWarn');
+  if(negWarnEl){
+    if(blocked){
+      negWarnEl.style.display='block';
+      negWarnEl.style.color='var(--rose)';
+      negWarnEl.textContent='This combination would leave you with a negative monthly balance — choose differently, or adjust your monthly saving above.';
+    } else if(after>=0 && total>0 && state.monthlySaving){
+      negWarnEl.style.display='block';
+      negWarnEl.style.color='var(--ledger)';
+      negWarnEl.textContent='Your monthly balance is positive — you can confirm and continue.';
+    } else {
+      negWarnEl.style.display='none';
+    }
+  }
 }
 function confirmInsurance(){
   const medChecked=document.getElementById('ins_chk_medical').checked;
@@ -6815,6 +6845,7 @@ function updateAllocSummary(){
     if(chk && chk.checked){
       const amt=getAllocAmount(key);
       total+=amt;
+      if(key==='EMERGENCY' || key==='PROPERTY') return; // excluded from the investment mix bar
       const cat=RISK_CATEGORY[key];
       if(cat){ catTotals[cat]+=amt; categorizedTotal+=amt; }
     }
@@ -6961,7 +6992,6 @@ function openAdjustSavingsModal(forced, extraCost){
   adjustModalForced = !!forced;
   adjustModalExtraCost = extraCost||0;
   document.getElementById('adjustModal').style.display='flex';
-  document.getElementById('adjustForcedNote').style.display = adjustModalForced ? 'block' : 'none';
   document.getElementById('adjustCancelBtn').style.display = adjustModalForced ? 'none' : '';
   document.getElementById('adjustPctSlider').max = monthlySavingCapPct(state.gross);
   document.getElementById('adjustPctSlider').value = state.monthlySaving.pct;
@@ -6979,6 +7009,17 @@ function updateAdjustPreview(){
   document.getElementById('adjustPctAmt').textContent = `-${fmt(p.commit)}/mo`;
   document.getElementById('adjustCfBreakdown').innerHTML = cfBreakdownHtml(p);
   document.getElementById('adjustSaveBtn').disabled = p.after < 0;
+  const noteEl=document.getElementById('adjustForcedNote');
+  if(noteEl){
+    noteEl.style.display='block';
+    if(p.after < 0){
+      noteEl.style.color='var(--rose)';
+      noteEl.textContent="Your monthly balance is negative. Reduce your monthly saving until it's positive to continue.";
+    } else {
+      noteEl.style.color='var(--ledger)';
+      noteEl.textContent="Your monthly balance is now positive — you can save and continue.";
+    }
+  }
 }
 function saveAdjustedSavings(){
   const pct = Number(document.getElementById('adjustPctSlider').value);
@@ -7017,7 +7058,9 @@ function saveAdjustedSavings(){
 function renderMonthlyAllocStage(){
   const rows=MONTHLY_MENU.map(key=>{
     const label = key==='ASB' ? (state.isMuslim ? 'ASB' : 'ASM') : INSTRUMENTS[key].label;
-    return `<button class="opt" data-key="${key}" onclick="toggleMonthlyAlloc('${key}')">${label}</button>`;
+    const catLabel = CATEGORY_LABEL[RISK_CATEGORY[key]] || '';
+    const rate = (instrumentRate(key, state.isMuslim)*100).toFixed(1);
+    return `<button class="opt" data-key="${key}" onclick="toggleMonthlyAlloc('${key}')">${label} <span style="opacity:.7;font-weight:400;">— ${catLabel}, ~${rate}%/yr</span></button>`;
   }).join('');
   const area=document.getElementById('stepArea');
   area.innerHTML=`
