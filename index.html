@@ -429,8 +429,9 @@ select.instrument-select{
 .alloc-summary.over{ color:var(--rose); }
 
 .cf-breakdown{ margin:14px 0 4px; border-top:1px solid var(--line); padding-top:10px; }
-.cf-row{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:13px; padding:4px 0; }
-.cf-row b{ font-weight:600; }
+.cf-row{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-family:var(--font-mono); font-size:13px; padding:4px 0; }
+.cf-row span{ min-width:0; }
+.cf-row b{ font-weight:600; white-space:nowrap; flex-shrink:0; }
 .cf-row b.neg{ color:var(--rose); }
 .cf-row.cf-total{ border-top:1px solid var(--line); margin-top:4px; padding-top:8px; font-size:14px; }
 .cf-row.cf-total b{ font-size:15px; }
@@ -1183,6 +1184,7 @@ const EV_INSURANCE = {age:48, id:'insurance', custom:'insurance', icon:'🗂️'
 const EV_BONUS = {age:49, id:'bonus', custom:'bonus', icon:'✉️', title:'20% Year-End Bonus'};
 
 const EV_BIRTHDAY50 = {age:50, id:'birthday50', custom:'birthday50', icon:'🎂', title:'Happy 50th Birthday!'};
+const EV_BIRTHDAY55 = {age:55, id:'birthday55', custom:'birthday55', icon:'🎂', title:'Happy 55th Birthday!'};
 
 const EV_EPF_WITHDRAW50 = {age:50, id:'epfwithdraw50', custom:'epfwithdraw50', icon:'🏦', title:'Pre-Retirement Withdrawal'};
 
@@ -1200,7 +1202,6 @@ const EV_CI = {age:54, id:'ci', custom:'ci54', icon:'🩺', title:'Critical Illn
 
 const EV_FACILITATOR_GATE55 = {age:55, id:'facgate55', custom:'facgate', icon:'⏸️', title:'Waiting for Facilitator', expectedCode:'PROCEED60'};
 const EV_FACILITATOR_GATE60 = {age:60, id:'facgate60', custom:'facgate', icon:'⏸️', title:'Waiting for Facilitator', expectedCode:'RETIRE60'};
-const EV_BIRTHDAY55 = {age:55, id:'birthday55', custom:'birthday55', icon:'🎂', title:'Happy 55th Birthday!'};
 const EV_CAREER55 = {age:55, id:'career', custom:'career55', icon:'🧭', title:'Retirement Decision'};
 
 const EV_WITHDRAW_EPF = {age:56,id:'withdrawepf',icon:'🏦',title:'Withdraw EPF',
@@ -1315,7 +1316,7 @@ const EVENTS_M = [
   EV_DIVERSIFY, EV_PROPERTY, mkBadMarket(), EV_INSURANCE, EV_BONUS,
   EV_BIRTHDAY50, EV_EPF_WITHDRAW50,
   EV_UMRAH, mkPromotion(), EV_MEDCARD, EV_CI,
-  mkDebtCheckin(55),
+  EV_BIRTHDAY55, mkDebtCheckin(55),
   mkBullMarket(), EV_WEDDING,
   EV_FACILITATOR_GATE60, forcedRetireCheck(60), EV_LHDN68, mkSpouseHospital(62),
   EV_ENDOWMENT_PAYOUT_65, EV_ENDING65,
@@ -1325,7 +1326,7 @@ const EVENTS_N = [
   EV_DIVERSIFY, EV_PROPERTY, mkBadMarket(), EV_INSURANCE, EV_BONUS,
   EV_BIRTHDAY50, EV_EPF_WITHDRAW50,
   EV_FRANCHISE50, mkPromotion(), EV_MEDCARD, EV_CI,
-  mkDebtCheckin(55), EV_FRANCHISE_CLOSE55,
+  EV_BIRTHDAY55, mkDebtCheckin(55), EV_FRANCHISE_CLOSE55,
   mkRetirementHoliday(56),
   mkBullMarket(), EV_SON_STUDY,
   EV_FACILITATOR_GATE60, forcedRetireCheck(60), EV_LHDN68,
@@ -1594,6 +1595,9 @@ const TRANSLATIONS={
     bonusChooseInstruments:'Choose instruments',
     bonusKeepAsCash:'Keep as Cash',
     birthday50Title:'Happy 50th Birthday!',
+    birthday55Title:'Happy 55th Birthday!',
+    birthday55Message:"Happy Birthday — you're 55! From today, you can freely withdraw your EPF savings without restriction.",
+    birthday55LogResult:'Turned 55 — EPF savings now freely withdrawable.',
     birthday50Message:'Happy Birthday — you\'re 50! From today, you\'re eligible to withdraw from your Akaun Sejahtera &amp; Akaun Fleksibel.',
     epfWithdrawTitle:'Pre-Retirement Withdrawal',
     epfTotalEpf:'Total EPF',
@@ -1948,6 +1952,9 @@ const TRANSLATIONS={
     bonusChooseInstruments:'Pilih instrumen',
     bonusKeepAsCash:'Kekalkan sebagai Tunai',
     birthday50Title:'Selamat Hari Jadi ke-50!',
+    birthday55Title:'Selamat Hari Jadi ke-55!',
+    birthday55Message:'Selamat Hari Jadi — anda kini berusia 55 tahun! Mulai hari ini, anda boleh mengeluarkan simpanan KWSP anda tanpa sebarang sekatan.',
+    birthday55LogResult:'Genap usia 55 — simpanan KWSP kini boleh dikeluarkan tanpa sekatan.',
     birthday50Message:'Selamat Hari Jadi — anda kini berusia 50 tahun! Mulai hari ini, anda layak membuat pengeluaran daripada Akaun Sejahtera &amp; Akaun Fleksibel.',
     epfWithdrawTitle:'Pengeluaran Pra-Persaraan',
     epfTotalEpf:'Jumlah KWSP',
@@ -2077,6 +2084,7 @@ const EVENT_TITLE_KEY_MAP={
   'Insurance Protection':'insuranceTitle',
   '20% Year-End Bonus':'bonusTitle',
   "Happy 50th Birthday!":'birthday50Title',
+  "Happy 55th Birthday!":'birthday55Title',
   'Pre-Retirement Withdrawal':'epfWithdrawTitle',
   'Umrah dan Ziarah':'umrahTitle',
   'Franchise Business Offer':'franchiseTitle',
@@ -2322,6 +2330,7 @@ function renderStep(){
     if(currentEvent.custom==='insurance'){ insState={}; renderInsuranceStage(); return; }
     if(currentEvent.custom==='bonus'){ bonusState={treat:false, invest:{}, emergencyAmt:0, treatAmt:0}; renderBonusStage(); return; }
     if(currentEvent.custom==='birthday50'){ renderBirthday50Stage(); return; }
+    if(currentEvent.custom==='birthday55'){ renderBirthday55Stage(); return; }
     if(currentEvent.custom==='epfwithdraw50'){ epfWithdrawState={mode:'remain', pct:0, invest:{}}; renderEpfWithdrawStage(); return; }
     if(currentEvent.custom==='endowmature'){ endowMatureState={mode:'cash', invest:{}}; renderEndowMatureStage(); return; }
     if(currentEvent.custom==='endowpayout'){ renderEndowPayoutStage(); return; }
@@ -2991,6 +3000,24 @@ function confirmBirthday50(){
   saveGame();
   if(pendingEvents.length>0){ renderStep(); } else { continueYear(); }
 }
+function renderBirthday55Stage(){
+  const area=document.getElementById('stepArea');
+  area.innerHTML=`
+    <div class="event-card">
+      <span class="icon">🎂</span>
+      <h3>${t('birthday55Title')}</h3>
+      <p class="scenario">${t('birthday55Message')}</p>
+      <div class="confirm-row">
+        <button class="btn gold" onclick="confirmBirthday55()">${t('continueArrowBtn')}</button>
+      </div>
+    </div>`;
+}
+function confirmBirthday55(){
+  state.log.push(`Age ${currentEvent.age} — ${currentEvent.title}: ${t('birthday55LogResult')}`);
+  pendingEvents.shift();
+  saveGame();
+  if(pendingEvents.length>0){ renderStep(); } else { continueYear(); }
+}
 
 function renderEpfWithdrawStage(){
   const area=document.getElementById('stepArea');
@@ -3007,7 +3034,7 @@ function renderEpfWithdrawStage(){
         </div>
         <div class="alloc-body">
           <div class="val-row">
-            <input type="number" id="epfw_pct_${key}" min="0" max="100" step="5" value="0" oninput="onEpfWithdrawInvestPctInput('${key}')">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="epfw_pct_${key}" value="0" oninput="onEpfWithdrawInvestPctInput('${key}')">
             <span class="hint" style="margin:0;white-space:nowrap;">${t('epfPctOfWithdrawn')}</span>
             <button type="button" class="max-btn" onclick="setEpfWithdrawInvestMax('${key}')">${t('maxBtn')}</button>
           </div>
@@ -3035,7 +3062,7 @@ function renderEpfWithdrawStage(){
 
       <div id="epfwWithdrawPanel" style="display:none;">
         <div class="val-row" style="margin:14px 0 4px;">
-          <input type="number" id="epfwPctNum" min="0" max="100" step="1" value="0" oninput="onEpfWithdrawPctNumInput()">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="epfwPctNum" value="0" oninput="onEpfWithdrawPctNumInput()">
           <span class="hint" style="margin:0;white-space:nowrap;">${t('epfPctOfAvailable')}</span>
         </div>
         <input type="range" id="epfwPctSlider" min="0" max="100" step="5" value="0" oninput="onEpfWithdrawPctInput()">
@@ -6042,7 +6069,7 @@ function renderPromotionStage(){
         </div>
         ${stillNegative?'':`<div class="alloc-body">
           <div class="val-row">
-            <input type="number" id="promo_saving_num" min="0" max="100" step="5" value="0" oninput="onPromoSavingInput()">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="promo_saving_num" value="0" oninput="onPromoSavingInput()">
             <span class="hint" style="margin:0;white-space:nowrap;">${t('promoPctOfRaise')}</span>
           </div>
           <input type="range" id="promo_saving_slider" min="0" max="100" step="5" value="0" oninput="onPromoSavingSlider()">
@@ -6707,28 +6734,6 @@ function confirmCiWithdraw(){
 }
 
 /* ---------- Happy 55th Birthday (simple custom interstitial) ---------- */
-function renderBirthday55Stage(){
-  const area=document.getElementById('stepArea');
-  area.innerHTML=`
-    <div class="event-card">
-      <span class="icon">🎂</span>
-      <h3>Happy 55th Birthday!</h3>
-      <p class="scenario">Happy Birthday — you're 55! From today, you can freely withdraw your EPF savings without restriction.</p>
-      <div class="stat-pair" style="grid-template-columns:1fr;">
-        <div class="stat-tile"><span class="stat-label">EPF Balance</span><span class="stat-value">${fmt(state.epf)}</span></div>
-      </div>
-      <div class="confirm-row">
-        <button class="btn gold" onclick="confirmBirthday55()">Continue &rarr;</button>
-      </div>
-    </div>`;
-}
-function confirmBirthday55(){
-  state.log.push(`Age ${currentEvent.age} — ${currentEvent.title}: Turned 55 — EPF now freely withdrawable.`);
-  pendingEvents.shift();
-  saveGame();
-  if(pendingEvents.length>0){ renderStep(); } else { continueYear(); }
-}
-
 /* ---------- Career Decision (age 55, custom: retire/work, lifestyle, portfolio review) ---------- */
 let careerState=null;
 const RETIREMENT_LIFESTYLES=[
@@ -6854,7 +6859,7 @@ function renderCareer55Stage(){
               <button type="button" class="max-btn" onclick="setPortfolioMaxAmt('${key}')">Max</button>
             </div>`
         : `<div class="val-row">
-              <input type="number" id="portfolio_pct_${key}" min="0" max="100" step="5" value="${prefillPct}" oninput="onPortfolioPctInput('${key}')">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" id="portfolio_pct_${key}" value="${prefillPct}" oninput="onPortfolioPctInput('${key}')">
               <span class="hint" style="margin:0;white-space:nowrap;">${t('portfolioPctOfTotalWealth')}</span>
               <button type="button" class="max-btn" onclick="setPortfolioMaxPct('${key}')">${t('maxBtn')}</button>
             </div>
@@ -7375,7 +7380,7 @@ function renderDiversifyStage(){
         </div>
         <div class="alloc-body">
           <div class="val-row">
-            <input type="number" id="pct_${key}" min="0" max="100" step="5" value="0" oninput="onPctAllocInput('${key}')">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="pct_${key}" value="0" oninput="onPctAllocInput('${key}')">
             <span class="hint" style="margin:0;white-space:nowrap;">${t('pctOfRemaining')}</span>
             <button type="button" class="max-btn" onclick="setMaxAlloc('${key}')">${t('max')}</button>
           </div>
