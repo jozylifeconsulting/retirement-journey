@@ -419,7 +419,28 @@ select.instrument-select{
 .alloc-row .alloc-head .ret{ font-family:var(--font-mono); font-size:11px; color:var(--ledger); }
 .alloc-row .alloc-body{ display:none; margin-top:10px; padding-left:29px; }
 .alloc-row.checked .alloc-body{ display:block; }
-.alloc-row .alloc-body input[type=range]{ width:100%; height:26px; accent-color:var(--gold); }
+.alloc-row .alloc-body input[type=range]{
+  width:100%; height:28px; accent-color:var(--gold);
+  -webkit-appearance:none; appearance:none; background:transparent; margin:10px 0;
+}
+.alloc-row .alloc-body input[type=range]::-webkit-slider-runnable-track{
+  height:8px; border-radius:8px; background:rgba(0,0,0,0.12);
+}
+.alloc-row .alloc-body input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:24px; height:24px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--paper);
+  box-shadow:0 1px 4px rgba(0,0,0,0.35);
+  margin-top:-8px;
+}
+.alloc-row .alloc-body input[type=range]::-moz-range-track{
+  height:8px; border-radius:8px; background:rgba(0,0,0,0.12);
+}
+.alloc-row .alloc-body input[type=range]::-moz-range-thumb{
+  width:24px; height:24px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--paper);
+  box-shadow:0 1px 4px rgba(0,0,0,0.35);
+}
 .alloc-row .alloc-body .val{ font-family:var(--font-mono); font-size:13px; text-align:right; margin-bottom:4px; }
 .alloc-row .alloc-body .hint{ font-size:11px; color:#8A9490; margin-top:4px; }
 .alloc-summary{
@@ -473,7 +494,7 @@ select.instrument-select{
 .portfolio-bar-row .bar-value{ font-family:var(--font-mono); font-size:10px; width:62px; text-align:right; flex-shrink:0; }
 
 .alloc-row .alloc-body .val-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-.alloc-row .alloc-body .val-row input[type=number]{
+.alloc-row .alloc-body .val-row input{
   flex:1; font-family:var(--font-mono); font-size:14px; padding:8px 10px;
   border:1.5px solid var(--line); border-radius:5px; background:var(--paper); color:var(--ledger-dark);
   min-width:0;
@@ -492,7 +513,28 @@ select.instrument-select{
   box-shadow:0 12px 40px rgba(0,0,0,0.3);
 }
 .modal-box h4{ font-family:var(--font-display); font-size:17px; margin:0 0 12px; color:var(--ledger-dark); }
-.modal-box input[type=range]{ width:100%; height:26px; accent-color:var(--gold); }
+.modal-box input[type=range]{
+  width:100%; height:28px; accent-color:var(--gold);
+  -webkit-appearance:none; appearance:none; background:transparent; margin:10px 0;
+}
+.modal-box input[type=range]::-webkit-slider-runnable-track{
+  height:8px; border-radius:8px; background:rgba(0,0,0,0.12);
+}
+.modal-box input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:24px; height:24px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--paper);
+  box-shadow:0 1px 4px rgba(0,0,0,0.35);
+  margin-top:-8px;
+}
+.modal-box input[type=range]::-moz-range-track{
+  height:8px; border-radius:8px; background:rgba(0,0,0,0.12);
+}
+.modal-box input[type=range]::-moz-range-thumb{
+  width:24px; height:24px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--paper);
+  box-shadow:0 1px 4px rgba(0,0,0,0.35);
+}
 .adjust-savings-btn{ width:100%; margin:0 0 14px; font-size:13px; padding:10px; }
 
 .who-pills{ display:flex; gap:8px; margin-top:8px; }
@@ -3033,9 +3075,9 @@ function renderEpfWithdrawStage(){
           <span class="ret">~${(instrumentRate(key, state.isMuslim)*100).toFixed(1)}%${yrSuffix()}</span>
         </div>
         <div class="alloc-body">
+          <p class="hint" style="margin:0 0 6px;">${t('epfPctOfWithdrawn')}</p>
           <div class="val-row">
             <input type="text" inputmode="numeric" pattern="[0-9]*" id="epfw_pct_${key}" value="0" oninput="onEpfWithdrawInvestPctInput('${key}')">
-            <span class="hint" style="margin:0;white-space:nowrap;">${t('epfPctOfWithdrawn')}</span>
             <button type="button" class="max-btn" onclick="setEpfWithdrawInvestMax('${key}')">${t('maxBtn')}</button>
           </div>
           <input type="range" id="epfw_pctsld_${key}" min="0" max="100" step="5" value="0" oninput="onEpfWithdrawInvestPctSlider('${key}')">
@@ -3061,9 +3103,9 @@ function renderEpfWithdrawStage(){
       </div>
 
       <div id="epfwWithdrawPanel" style="display:none;">
-        <div class="val-row" style="margin:14px 0 4px;">
+        <p class="hint" style="margin:0 0 6px;">${t('epfPctOfAvailable')}</p>
+        <div class="val-row" style="margin:0 0 4px;">
           <input type="text" inputmode="numeric" pattern="[0-9]*" id="epfwPctNum" value="0" oninput="onEpfWithdrawPctNumInput()">
-          <span class="hint" style="margin:0;white-space:nowrap;">${t('epfPctOfAvailable')}</span>
         </div>
         <input type="range" id="epfwPctSlider" min="0" max="100" step="5" value="0" oninput="onEpfWithdrawPctInput()">
         <div class="row" style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;margin:4px 0 0;color:#4A5551;">
@@ -6068,9 +6110,9 @@ function renderPromotionStage(){
           <span class="ret" id="promo_saving_ret">${fmt(savingAmount)}${moSuffix()}</span>
         </div>
         ${stillNegative?'':`<div class="alloc-body">
+          <p class="hint" style="margin:0 0 6px;">${t('promoPctOfRaise')}</p>
           <div class="val-row">
             <input type="text" inputmode="numeric" pattern="[0-9]*" id="promo_saving_num" value="0" oninput="onPromoSavingInput()">
-            <span class="hint" style="margin:0;white-space:nowrap;">${t('promoPctOfRaise')}</span>
           </div>
           <input type="range" id="promo_saving_slider" min="0" max="100" step="5" value="0" oninput="onPromoSavingSlider()">
           <div class="cf-breakdown" style="margin-top:8px;">
@@ -6858,9 +6900,9 @@ function renderCareer55Stage(){
               <input type="text" inputmode="numeric" id="portfolio_num_${key}" value="${prefillAmt}" oninput="formatMoneyInput(this);onPortfolioAmtInput('${key}')">
               <button type="button" class="max-btn" onclick="setPortfolioMaxAmt('${key}')">Max</button>
             </div>`
-        : `<div class="val-row">
+        : `<p class="hint" style="margin:0 0 6px;">${t('portfolioPctOfTotalWealth')}</p>
+            <div class="val-row">
               <input type="text" inputmode="numeric" pattern="[0-9]*" id="portfolio_pct_${key}" value="${prefillPct}" oninput="onPortfolioPctInput('${key}')">
-              <span class="hint" style="margin:0;white-space:nowrap;">${t('portfolioPctOfTotalWealth')}</span>
               <button type="button" class="max-btn" onclick="setPortfolioMaxPct('${key}')">${t('maxBtn')}</button>
             </div>
             <input type="range" id="portfolio_pctsld_${key}" min="0" max="100" step="5" value="${prefillPct}" oninput="onPortfolioPctSlider('${key}')">
@@ -7379,9 +7421,9 @@ function renderDiversifyStage(){
           <span class="ret">${ret}</span>
         </div>
         <div class="alloc-body">
+          <p class="hint" style="margin:0 0 6px;">${t('pctOfRemaining')}</p>
           <div class="val-row">
             <input type="text" inputmode="numeric" pattern="[0-9]*" id="pct_${key}" value="0" oninput="onPctAllocInput('${key}')">
-            <span class="hint" style="margin:0;white-space:nowrap;">${t('pctOfRemaining')}</span>
             <button type="button" class="max-btn" onclick="setMaxAlloc('${key}')">${t('max')}</button>
           </div>
           <input type="range" id="pctsld_${key}" min="0" max="100" step="5" value="0" oninput="onPctAllocSlider('${key}')">
@@ -7787,6 +7829,7 @@ function updateAdjustPreview(){
   }
 }
 function saveAdjustedSavings(){
+  const wasForced = adjustModalForced;
   const pct = Number(document.getElementById('adjustPctSlider').value);
   const p = monthlyPctPreview(pct);
   if(p.after < 0) return; // never allow a saving commitment that pushes cashflow negative
@@ -7818,6 +7861,13 @@ function saveAdjustedSavings(){
   // box precisely rather than the generic .scenario class to avoid any ambiguity
   const propBox=document.getElementById('propertyCfBox');
   if(propBox && currentEvent && currentEvent.id==='property'){ propBox.innerHTML=propertyCfRowsHtml(state); }
+  // A forced prompt only ever follows a decision that's already finalized (Property's
+  // purchase, or a market shock) — the player has nothing left to choose on the screen
+  // underneath, so advance immediately rather than leaving that confusing, already-decided
+  // screen visible with its disabled option buttons still showing.
+  if(wasForced){
+    if(pendingEvents.length>0){ renderStep(); } else { continueYear(); }
+  }
 }
 
 function renderMonthlyAllocStage(){
